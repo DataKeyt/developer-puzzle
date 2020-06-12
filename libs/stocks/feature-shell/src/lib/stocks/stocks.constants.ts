@@ -2,6 +2,7 @@ export const STOCKS_CONSTANTS = {
   SYMBOL_PLACEHOLDER: 'Symbol e.g AAPL',
   TIME_PERIOD_LABEL: 'Favorite time period',
   SYMBOL_MISSING_ERROR: 'Please enter a symbol',
+  PERIOD_SELECTION_ERROR: 'Please select a period',
   BUTTON_TEXT: 'Go',
   TIME_PERIODS: [
     { viewValue: 'All available data', value: 'max' },
