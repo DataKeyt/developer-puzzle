@@ -1,4 +1,5 @@
 import { Action } from '@ngrx/store';
+import { HttpErrorResponse } from '@angular/common/http';
 import { PriceQueryResponse } from './price-query.type';
 
 export enum PriceQueryActionTypes {
@@ -15,7 +16,7 @@ export class FetchPriceQuery implements Action {
 
 export class PriceQueryFetchError implements Action {
   readonly type = PriceQueryActionTypes.PriceQueryFetchError;
-  constructor(public error: any) {}
+  constructor(public error: HttpErrorResponse) {}
 }
 
 export class PriceQueryFetched implements Action {

@@ -1,33 +1,55 @@
-<form [formGroup]="stockPickerForm">
-  <mat-form-field>
-    <input
-      matInput
-      placeholder="Symbol e.g AAPL"
-      formControlName="symbol"
-      value=""
-    />
-    <mat-error
-      ><span
-        *ngIf="
-          !stockPickerForm.get('symbol').valid &&
-          stockPickerForm.get('symbol').touched
-        "
-        >Please enter a symbol</span
-      >
-    </mat-error>
-  </mat-form-field>
+<main role="main">
+  <form [formGroup]="stockPickerForm">
+    <mat-form-field hideRequiredMarker>
+      <mat-label for="symbol-input">{{
+        CONSTANTS.SYMBOL_PLACEHOLDER
+      }}</mat-label>
+      <input
+        matInput
+        id="symbol-input"
+        formControlName="symbol"
+        type="text"
+        value=""
+        autofocus
+        required
+      />
+      <mat-error *ngIf="!symbolInput.valid && symbolInput.touched"
+        >{{ CONSTANTS.SYMBOL_MISSING_ERROR }}
+      </mat-error>
+    </mat-form-field>
 
-  <mat-form-field>
-    <mat-label>Favorite time period</mat-label>
-    <mat-select formControlName="period">
-      <mat-option
-        *ngFor="let timePeriod of timePeriods"
-        [value]="timePeriod.value"
+    <mat-form-field>
+      <mat-label for="period-selection">{{
+        CONSTANTS.TIME_PERIOD_LABEL
+      }}</mat-label>
+      <mat-select formControlName="period" id="period-selection">
+        <mat-option
+          *ngFor="let timePeriod of CONSTANTS.TIME_PERIODS"
+          [value]="timePeriod.value"
+        >
+          {{ timePeriod.viewValue }}
+        </mat-option>
+      </mat-select>
+      <mat-error
+        *ngIf="periodInput.hasError('required') && periodInput.touched"
+        >{{ CONSTANTS.PERIOD_SELECTION_ERROR }}</mat-error
       >
-        {{ timePeriod.viewValue }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
-</form>
+    </mat-form-field>
+  </form>
 
-<coding-challenge-chart [data$]="quotes$"></coding-challenge-chart>
+  <div aria-live="polite">
+    <mat-progress-bar
+      aria-label="Content is loading"
+      mode="indeterminate"
+      *ngIf="(loading$ | async)"
+    ></mat-progress-bar>
+  </div>
+
+  <mat-error *ngIf="(error$ | async) as errorMessage">
+    {{ CONSTANTS.ERROR_OCCURRED }} {{ errorMessage }}.
+  </mat-error>
+</main>
+
+<section aria-live="polite">
+  <coding-challenge-chart [data$]="quotes$"></coding-challenge-chart>
+</section>
