@@ -4,12 +4,15 @@ import {
   MatFormFieldModule,
   MatInputModule,
   MatSelectModule,
-  MatButtonModule
+  MatButtonModule,
+  MatProgressBarModule,
+  MatDatepickerModule,
+  MatNativeDateModule
 } from '@angular/material';
 import { RouterModule } from '@angular/router';
+import { ReactiveFormsModule } from '@angular/forms';
 import { SharedUiChartModule } from '@coding-challenge/shared/ui/chart';
 import { StocksComponent } from './stocks/stocks.component';
-import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   imports: [
@@ -22,6 +25,9 @@ import { ReactiveFormsModule } from '@angular/forms';
     MatInputModule,
     MatSelectModule,
     MatButtonModule,
+    MatProgressBarModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
     SharedUiChartModule
   ],
   declarations: [StocksComponent]

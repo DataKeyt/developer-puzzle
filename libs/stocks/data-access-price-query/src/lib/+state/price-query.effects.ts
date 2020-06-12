@@ -29,12 +29,19 @@ export class PriceQueryEffects {
             }?token=${this.env.apiKey}`
           )
           .pipe(
-            map(resp => new PriceQueryFetched(resp as PriceQueryResponse[]))
+            map(
+              resp =>
+                new PriceQueryFetched(
+                  resp as PriceQueryResponse[],
+                  action.startDate,
+                  action.endDate
+                )
+            )
           );
       },
 
-      onError: (action: FetchPriceQuery, error) => {
-        return new PriceQueryFetchError(error);
+      onError: (action: FetchPriceQuery, errorObj) => {
+        return new PriceQueryFetchError(errorObj.error);
       }
     }
   );

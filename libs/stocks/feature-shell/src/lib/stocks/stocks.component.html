@@ -1,35 +1,91 @@
-<form [formGroup]="stockPickerForm">
-  <mat-form-field>
-    <input
-      matInput
-      placeholder="Symbol e.g AAPL"
-      formControlName="symbol"
-      value=""
-    />
-    <mat-error
-      ><span
-        *ngIf="
-          !stockPickerForm.get('symbol').valid &&
-          stockPickerForm.get('symbol').touched
-        "
-        >Please enter a symbol</span
-      >
-    </mat-error>
-  </mat-form-field>
+<main role="main">
+  <form [formGroup]="stockPickerForm">
+    <mat-form-field hideRequiredMarker class="input-for-symbol">
+      <mat-label for="symbol-input">{{
+        CONSTANTS.SYMBOL_PLACEHOLDER
+      }}</mat-label>
+      <input
+        matInput
+        id="symbol-input"
+        formControlName="symbol"
+        type="text"
+        value=""
+        autofocus
+        required
+      />
+      <mat-error *ngIf="!symbolInput.valid && symbolInput.touched"
+        >{{ CONSTANTS.SYMBOL_MISSING_ERROR }}
+      </mat-error>
+    </mat-form-field>
 
-  <mat-form-field>
-    <mat-label>Favorite time period</mat-label>
-    <mat-select formControlName="period">
-      <mat-option
-        *ngFor="let timePeriod of timePeriods"
-        [value]="timePeriod.value"
-      >
-        {{ timePeriod.viewValue }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
+    <div class="date-range-picker">
+      <mat-form-field class="date-selector">
+        <mat-label for="start-date-select">{{
+          CONSTANTS.START_DATE
+        }}</mat-label>
+        <input
+          id="start-date-select"
+          matInput
+          [max]="maxDate"
+          [matDatepicker]="pickerFrom"
+          formControlName="startDate"
+          aria-label="Period start date"
+          (blur)="validateDate('startDate')"
+          (dateChange)="compareDates(startDate.value, endDate.value)"
+        />
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="pickerFrom"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #pickerFrom></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field class="date-selector">
+        <mat-label for="end-date-select">{{ CONSTANTS.END_DATE }}</mat-label>
+        <input
+          id="end-date-select"
+          matInput
+          [max]="maxDate"
+          [matDatepicker]="pickerTo"
+          formControlName="endDate"
+          aria-label="Period end date"
+          (blur)="validateDate('endDate')"
+          (dateChange)="compareDates(startDate.value, endDate.value)"
+        />
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="pickerTo"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #pickerTo></mat-datepicker>
+      </mat-form-field>
+    </div>
+  </form>
 
-  <button (click)="fetchQuote()" mat-raised-button>Go</button>
-</form>
+  <div aria-live="polite">
+    <mat-progress-bar
+      aria-label="Content is loading"
+      mode="indeterminate"
+      *ngIf="(loading$ | async)"
+    ></mat-progress-bar>
+  </div>
 
-<coding-challenge-chart [data$]="quotes$"></coding-challenge-chart>
+  <mat-error *ngIf="(error$ | async) as errorMessage">
+    {{ CONSTANTS.ERROR_OCCURRED }} {{ errorMessage }}.
+  </mat-error>
+
+  <div aria-live="polite">
+    <h3
+      role="alert"
+      *ngIf="
+        (quotes$ | async)?.length === 0 &&
+        !(error$ | async) &&
+        !(loading$ | async)
+      "
+    >
+      {{ CONSTANTS.NO_DATA_CURRENTLY }}
+    </h3>
+  </div>
+
+  <section aria-live="polite">
+    <coding-challenge-chart [data$]="quotes$"></coding-challenge-chart>
+  </section>
+</main>
