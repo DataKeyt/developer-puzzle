@@ -3,8 +3,16 @@ import { map, pick } from 'lodash-es';
 import { parse } from 'date-fns';
 
 export function transformPriceQueryResponse(
-  response: PriceQueryResponse[]
+  response: PriceQueryResponse[],
+  startDate: Date,
+  endDate: Date
 ): PriceQuery[] {
+  response = response.filter(resp => {
+    const stockDate = new Date(resp.date);
+    // Set date to midnight to start from the day's beginning
+    stockDate.setHours(0, 0, 0, 0);
+    return stockDate >= startDate && stockDate <= endDate;
+  });
   return map(
     response,
     responseItem =>

@@ -29,7 +29,14 @@ export class PriceQueryEffects {
             }?token=${this.env.apiKey}`
           )
           .pipe(
-            map(resp => new PriceQueryFetched(resp as PriceQueryResponse[]))
+            map(
+              resp =>
+                new PriceQueryFetched(
+                  resp as PriceQueryResponse[],
+                  action.startDate,
+                  action.endDate
+                )
+            )
           );
       },
 

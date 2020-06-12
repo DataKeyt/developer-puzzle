@@ -25,7 +25,14 @@ export class PriceQueryFacade {
 
   constructor(private store: Store<PriceQueryPartialState>) {}
 
-  public fetchQuote(symbol: string, period: string) {
-    this.store.dispatch(new FetchPriceQuery(symbol, period));
+  public fetchQuote(
+    symbol: string,
+    period: string,
+    startDate: Date,
+    endDate: Date
+  ) {
+    this.store.dispatch(
+      new FetchPriceQuery(symbol, period, startDate, endDate)
+    );
   }
 }

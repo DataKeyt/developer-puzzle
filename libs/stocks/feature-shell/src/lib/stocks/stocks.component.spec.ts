@@ -11,7 +11,9 @@ import {
   MatInputModule,
   MatSelectModule,
   MatButtonModule,
-  MatProgressBarModule
+  MatProgressBarModule,
+  MatDatepickerModule,
+  MatNativeDateModule
 } from '@angular/material';
 
 import { PriceQueryFacade } from '@coding-challenge/stocks/data-access-price-query';
@@ -34,6 +36,8 @@ describe('StocksComponent', () => {
         MatSelectModule,
         MatButtonModule,
         MatProgressBarModule,
+        MatDatepickerModule,
+        MatNativeDateModule,
         SharedUiChartModule,
         StoreModule.forRoot({})
       ],
@@ -86,27 +90,34 @@ describe('StocksComponent', () => {
     it('should display error when symbol input is empty', () => {
       component.stockPickerForm.setValue({
         symbol: '',
-        period: '1y'
+        startDate: '2020-05-03',
+        endDate: '2020-05-15'
       });
       component.symbolInput.markAsTouched();
       expect(component.symbolInput.errors.required).toBeTruthy();
     });
 
-    it('should display error when period input is empty', () => {
-      component.stockPickerForm.setValue({
-        symbol: 'AAPL',
-        period: ''
+    describe('compareDates()', () => {
+      it('should set the date values to be the same when To is earlier than From', () => {
+        const start = new Date('2020-04-04');
+        const end = new Date('2020-04-01');
+        component.startDate.setValue(start);
+        component.endDate.setValue(end);
+        component.compareDates(start, end);
+        expect(component.endDate.value).toEqual(component.startDate.value);
       });
-      component.periodInput.markAsTouched();
-      expect(component.periodInput.errors.required).toBeTruthy();
     });
 
     it('should fetch stock details', () => {
       component.stockPickerForm.setValue({
-        symbol: 'AAPL',
-        period: '1y'
+        symbol: 'AAL',
+        startDate: '2020-05-03',
+        endDate: '2020-05-15'
       });
-      component.fetchQuote();
+      component.fetchQuote(
+        new Date(component.startDate.value),
+        new Date(component.endDate.value)
+      );
       expect(component.quotes$).toBeTruthy();
     });
   });

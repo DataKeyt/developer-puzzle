@@ -46,7 +46,11 @@ export function priceQueryReducer(
     }
     case PriceQueryActionTypes.PriceQueryFetched: {
       return priceQueryAdapter.addAll(
-        transformPriceQueryResponse(action.queryResults),
+        transformPriceQueryResponse(
+          action.queryResults,
+          action.startDate,
+          action.endDate
+        ),
         { ...state, loading: false, error: null }
       );
     }
