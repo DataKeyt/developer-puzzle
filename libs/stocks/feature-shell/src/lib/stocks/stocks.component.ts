@@ -70,7 +70,8 @@ export class StocksComponent implements OnInit, OnDestroy {
       start = end;
       // Set value to the input so the user would also have the info about what just happened
       this.startDate.setValue(end);
-    } if (!end) {
+    }
+    if (!end) {
       end = new Date();
       this.endDate.setValue(end);
     }
