@@ -6,7 +6,12 @@ import { StocksAppConfig } from '@coding-challenge/stocks/data-access-app-config
 
 export const environment: StocksAppConfig = {
   production: false,
-  apiKey: '',
+  /*
+  Normally, I would add the API key to a config.constants file and add that to the .gitignore
+  because I am strongly against putting your API key out in the open.
+  But for the purposes of this exercise, I will resist my instincts and just add it here.
+  */
+  apiKey: 'Tpk_c616780a1013445a8c3e65f21ec11053',
   apiURL: 'https://sandbox.iexapis.com'
 };
 
