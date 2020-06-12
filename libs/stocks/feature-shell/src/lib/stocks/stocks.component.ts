@@ -1,29 +1,31 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { debounceTime, takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 import { PriceQueryFacade } from '@coding-challenge/stocks/data-access-price-query';
+import { STOCKS_CONSTANTS } from './stocks.constants';
 
 @Component({
   selector: 'coding-challenge-stocks',
   templateUrl: './stocks.component.html',
   styleUrls: ['./stocks.component.css']
 })
-export class StocksComponent implements OnInit {
-  stockPickerForm: FormGroup;
-  symbol: string;
-  period: string;
+export class StocksComponent implements OnInit, OnDestroy {
+  readonly CONSTANTS = STOCKS_CONSTANTS;
 
-  quotes$ = this.priceQuery.priceQueries$;
+  private componentDestroyed$ = new Subject();
 
-  timePeriods = [
-    { viewValue: 'All available data', value: 'max' },
-    { viewValue: 'Five years', value: '5y' },
-    { viewValue: 'Two years', value: '2y' },
-    { viewValue: 'One year', value: '1y' },
-    { viewValue: 'Year-to-date', value: 'ytd' },
-    { viewValue: 'Six months', value: '6m' },
-    { viewValue: 'Three months', value: '3m' },
-    { viewValue: 'One month', value: '1m' }
-  ];
+  public stockPickerForm: FormGroup;
+  public quotes$ = this.priceQuery.priceQueries$;
+  public loading$ = this.priceQuery.priceQueryLoading$;
+  public error$ = this.priceQuery.priceQueryError$;
+
+  get symbolInput() {
+    return this.stockPickerForm.get('symbol');
+  }
+  get periodInput() {
+    return this.stockPickerForm.get('period');
+  }
 
   constructor(private fb: FormBuilder, private priceQuery: PriceQueryFacade) {
     this.stockPickerForm = fb.group({
@@ -32,12 +34,26 @@ export class StocksComponent implements OnInit {
     });
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.stockPickerForm.valueChanges
+      .pipe(
+        debounceTime(this.CONSTANTS.DEBOUNCE_TIME),
+        takeUntil(this.componentDestroyed$)
+      )
+      .subscribe(() => {
+        this.fetchQuote();
+      });
+  }
 
-  fetchQuote() {
+  public fetchQuote() {
     if (this.stockPickerForm.valid) {
       const { symbol, period } = this.stockPickerForm.value;
       this.priceQuery.fetchQuote(symbol, period);
     }
+  }
+
+  ngOnDestroy(): void {
+    this.componentDestroyed$.next();
+    this.componentDestroyed$.complete();
   }
 }

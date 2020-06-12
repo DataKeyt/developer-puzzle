@@ -1,9 +1,13 @@
 import { TestBed, async } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [
+        RouterTestingModule.withRoutes([{ path: '', component: AppComponent }])
+      ],
       declarations: [AppComponent]
     }).compileComponents();
   }));
@@ -14,10 +18,10 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have as title 'stocks'`, () => {
+  it(`should have as title 'Stocks'`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.debugElement.componentInstance;
-    expect(app.title).toEqual('stocks');
+    expect(app.title).toEqual('Stocks');
   });
 
   it('should render title in a h1 tag', () => {
@@ -25,7 +29,7 @@ describe('AppComponent', () => {
     fixture.detectChanges();
     const compiled = fixture.debugElement.nativeElement;
     expect(compiled.querySelector('h1').textContent).toContain(
-      'Welcome to stocks!'
+      'Welcome to Stocks!'
     );
   });
 });
