@@ -1,3 +1,14 @@
-mat-form-field {
+mat-form-field.input-for-symbol {
   display: block;
+}
+
+.date-range-picker {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+mat-form-field.date-selector {
+  flex: 1;
+  padding: 5px;
 }

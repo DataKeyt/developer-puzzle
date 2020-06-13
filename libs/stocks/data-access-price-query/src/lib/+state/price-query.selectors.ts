@@ -20,3 +20,13 @@ export const getAllPriceQueries = createSelector(
   getPriceQueryState,
   selectAll
 );
+
+export const getLoadingStatus = createSelector(
+  getPriceQueryState,
+  (state: PriceQueryState) => state.loading
+);
+
+export const getErrorMessage = createSelector(
+  getPriceQueryState,
+  (state: PriceQueryState) => state.error
+);
